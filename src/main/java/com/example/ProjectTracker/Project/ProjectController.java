@@ -29,7 +29,7 @@ public class ProjectController {
         if (projectName == null)
             projectService.getProjects().forEach(projects::add);
         else
-            projectService.findByprojectNameContaining(projectName).forEach(projects::add);
+            projectService.findByProjectNameContaining(projectName).forEach(projects::add);
         if (projects.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

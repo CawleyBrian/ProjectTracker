@@ -29,8 +29,8 @@ public class ProjectService {
         return (Project)this.projectRepository.getById(projectId);
     }
 
-    public List<Project> findByprojectNameContaining(String projectName) {
-        return this.projectRepository.findByprojectNameContaining(projectName);
+    public List<Project> findByProjectNameContaining(String projectName) {
+        return this.projectRepository.findByProjectNameContaining(projectName);
     }
 
     public Project addProject(Project project) {

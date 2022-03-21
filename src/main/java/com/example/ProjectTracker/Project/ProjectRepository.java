@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<Project> findByprojectNameContaining(String title);
+    List<Project> findByProjectNameContaining(String title);
 }
