@@ -31,7 +31,6 @@ public class TaskService {
         if (!taskRepository.findByProjectId(projectId).isEmpty()){
             return taskRepository.findByProjectId(projectId);
         } else throw new ResourceNotFoundException("No tasks for project Id " + projectId);
-
     }
 
     public void addTask(Task task) {

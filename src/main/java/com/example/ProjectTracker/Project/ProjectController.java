@@ -27,7 +27,7 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getAllProjects(@RequestParam(required = false) String projectName) {
         List<Project> projects = new ArrayList<Project>();
         if (projectName == null)
-            projectService.getProjects().forEach(projects::add);
+            projectService.getAllProjects().forEach(projects::add);
         else
             projectService.findByProjectNameContaining(projectName).forEach(projects::add);
         if (projects.isEmpty()) {

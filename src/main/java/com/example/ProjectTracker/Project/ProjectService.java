@@ -21,12 +21,12 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public List<Project> getProjects() {
+    public List<Project> getAllProjects() {
         return this.projectRepository.findAll();
     }
 
-    public Project getProject(Long projectId) {
-        return (Project)this.projectRepository.getById(projectId);
+    public Optional<Project> findById(long id) {
+        return this.projectRepository.findById(id);
     }
 
     public List<Project> findByProjectNameContaining(String projectName) {
@@ -61,7 +61,5 @@ public class ProjectService {
         System.out.println(project);
     }
 
-    public Optional<Project> findById(long id) {
-        return this.projectRepository.findById(id);
-    }
+
 }

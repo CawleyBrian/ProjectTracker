@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/task")
@@ -85,23 +86,23 @@ public class TaskController {
         taskService.updateTask(taskId, title, description);
     }
 
-    //Find tasks under existing ProjectId and Move to new ProjectID
+/*    //Find tasks under existing ProjectId and Move to new ProjectID
     @PutMapping(path = "/task/{projectId}/project")
     public ResponseEntity<List<Task>> moveTasksByProjectId(
             @PathVariable(value="projectId") Long projectId,
             @RequestParam(required = true) Long previousId){
-        Project project = projectService.getProject(projectId);
+        Optional<Project> project = projectService.findById(projectId);
         if(project == null){
             throw new ResourceNotFoundException("New project not found");
         }
-        if(projectService.getProject(previousId) == null){
+        if(projectService.getProjectById(previousId) == null){
             throw new ResourceNotFoundException("Existing project not found");
         }
 
         taskService.moveTasksByProject(project, previousId);
         return new ResponseEntity<>(HttpStatus.OK);
 
-    }
+    }*/
 
 
 }
