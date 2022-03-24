@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
+
+import com.example.ProjectTracker.Exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,12 +36,12 @@ public class ProjectService {
     }
 
     public Project addProject(Project project) {
-        return (Project)this.projectRepository.save(project);
+        return this.projectRepository.save(project);
     }
 
     public void deleteProject(Long projectId) {
         if (!this.projectRepository.existsById(projectId)) {
-            throw new IllegalStateException("Project Id " + projectId + " does not exist");
+            throw new ResourceNotFoundException("Project Id " + projectId + " does not exist");
         } else {
             this.projectRepository.deleteById(projectId);
         }
@@ -47,13 +49,12 @@ public class ProjectService {
 
     @Transactional
     public void updateProject(Long projectId, String projectName, Integer budget) {
-        Project project = (Project)this.projectRepository.findById(projectId).orElseThrow(() -> {
-            return new IllegalStateException("project " + projectId + "not found");
+        Project project = (Project) this.projectRepository.findById(projectId).orElseThrow(() -> {
+            return new ResourceNotFoundException("project " + projectId + "not found");
         });
         if (projectName != null && projectName.length() > 0 && !Objects.equals(project.getProjectName(), projectName)) {
             project.setProjectName(projectName);
         }
-
         if (budget != null && budget > 0) {
             project.setBudget(budget);
         }

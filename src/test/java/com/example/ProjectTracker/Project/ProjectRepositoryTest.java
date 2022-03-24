@@ -29,7 +29,6 @@ class ProjectRepositoryTest {
 
         Project projectTwo = new Project("Project two",200);
         projectRepository.save(projectTwo);
-
         //when
         List<Project> projectList = projectRepository.findByProjectNameContaining("one");
         //then

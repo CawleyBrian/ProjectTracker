@@ -55,14 +55,14 @@ public class ProjectController {
     @PutMapping("/projects/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable("id") long id, @RequestParam(required = false) String title,
                                                  @RequestParam(required = false) Integer budget) {
-        Project project1 = projectService.findById(id)
+        Project project = projectService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id + " + id));
 
-        project1.setProjectName(title);
-        project1.setBudget(budget);
+        project.setProjectName(title);
+        project.setBudget(budget);
 
-        projectService.addProject(project1);
-        return new ResponseEntity<>(project1, HttpStatus.OK);
+        projectService.addProject(project);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     /* old one
