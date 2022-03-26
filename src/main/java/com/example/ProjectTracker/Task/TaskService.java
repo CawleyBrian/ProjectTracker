@@ -2,7 +2,6 @@ package com.example.ProjectTracker.Task;
 
 import com.example.ProjectTracker.Exception.ResourceNotFoundException;
 import com.example.ProjectTracker.Project.Project;
-import com.example.ProjectTracker.Project.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

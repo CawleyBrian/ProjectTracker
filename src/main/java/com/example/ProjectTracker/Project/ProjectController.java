@@ -1,14 +1,10 @@
 package com.example.ProjectTracker.Project;
 
 import com.example.ProjectTracker.Exception.ResourceNotFoundException;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.ResourceChainRegistration;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,13 +61,6 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    /* old one
-    @PutMapping(path = "{projectId}")
-    public void updateProject(
-            @PathVariable("projectId") Long projectId,
-            @RequestParam(required = false) String projectName,
-            @RequestParam(required = false) Integer budget) {
-        projectServi */
 
     @DeleteMapping(path = "{projectId}")
     public void deleteProject(
