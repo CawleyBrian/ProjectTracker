@@ -1,14 +1,23 @@
 package com.example.ProjectTracker.Project;
+import com.example.ProjectTracker.Exception.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +25,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -43,10 +53,11 @@ class ProjectControllerTest {
         //Mock service should return list
         given(projectService.getAllProjects()).willReturn(projectList);
 
-
+        //Request to get all projects
         RequestBuilder request = get("/api/v1/project/projects")
                 .contentType(MediaType.APPLICATION_JSON);
 
+        //returns 2 json objects. check 1st object's projectName field matches projectOne above.
         mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -64,7 +75,7 @@ class ProjectControllerTest {
         //Mock service should return list
         given(projectService.findByProjectNameContaining("test")).willReturn(projectList);
 
-
+        //get projects with name containing "test"
         RequestBuilder request = get("/api/v1/project/projects?projectName=test")
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -79,13 +90,14 @@ class ProjectControllerTest {
         //Create empty list
         List<Project> projectList = new ArrayList<>();
 
-        //Mock service should return list
+        //Mock service will return list
         given(projectService.findByProjectNameContaining("test")).willReturn(projectList);
 
-
+        //get projects with name containing "test"
         RequestBuilder request = get("/api/v1/project/projects?projectName=test")
                 .contentType(MediaType.APPLICATION_JSON);
 
+        //no content returned
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
@@ -95,7 +107,6 @@ class ProjectControllerTest {
     void getProjectById() throws Exception {
 
         Project projectOne = new Project(1L, "test project", 200);
-
         when(projectService.findById(1L)).thenReturn(Optional.of(projectOne));
 
         RequestBuilder request = get("/api/v1/project/projects/1")
@@ -107,4 +118,53 @@ class ProjectControllerTest {
 
 
     }
+
+    @Test
+    void shouldCreateProject() throws Exception{
+
+        //Mock service returns new project.
+        Project newProject = new Project("test project", 200);
+        given(projectService.addProject(newProject)).willReturn(newProject);
+
+        //map object to JSON
+        final ObjectMapper mapper = new ObjectMapper();
+        final String jsonContent = mapper.writeValueAsString(newProject);
+
+        RequestBuilder request = post("/api/v1/project/projects").contentType(MediaType.APPLICATION_JSON)
+                .content(jsonContent);
+
+        mockMvc.perform(request).andExpect(status().isCreated());
+
+    }
+
+    @Test
+    void shouldUpdateProject() throws Exception{
+
+        //Mock service returns Project to be updated
+        Project newProject = new Project(1L, "test project", 200);
+        when(projectService.findById(1L)).thenReturn(Optional.of(newProject));
+
+        //request with updated name and budget
+        RequestBuilder request = put("/api/v1/project/projects/1?title=updated project title&budget=321")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        //Check Status is OK and returned JSON is updated as requested.
+        mockMvc.perform(request).andExpect(status().isOk())
+                .andExpect(jsonPath("projectName", Matchers.is("updated project title")))
+                .andExpect(jsonPath("budget",Matchers.is(321)));
+
+
+/*        public ResponseEntity<Project> updateProject(@PathVariable("id") long id, @RequestParam(required = false) String title,
+        @RequestParam(required = false) Integer budget) {
+            Project project = projectService.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Project not found with id + " + id));
+
+            project.setProjectName(title);
+            project.setBudget(budget);
+
+            projectService.addProject(project);
+            return new ResponseEntity<>(project, HttpStatus.OK);*/
+
+    }
+
 }
