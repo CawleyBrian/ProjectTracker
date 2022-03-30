@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +22,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -152,19 +148,21 @@ class ProjectControllerTest {
         mockMvc.perform(request).andExpect(status().isOk())
                 .andExpect(jsonPath("projectName", Matchers.is("updated project title")))
                 .andExpect(jsonPath("budget",Matchers.is(321)));
+    }
+
+    @Test
+    void shouldDeleteProject() throws Exception{
+
+        //Mock deleting project
+        Project newProject = new Project(1L, "test project", 200);
+        doNothing().when(projectService).deleteProject(1L);
+
+        //Request
+        RequestBuilder request = delete("/api/v1/project/projects/1")
+                .contentType(MediaType.APPLICATION_JSON);
 
 
-/*        public ResponseEntity<Project> updateProject(@PathVariable("id") long id, @RequestParam(required = false) String title,
-        @RequestParam(required = false) Integer budget) {
-            Project project = projectService.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Project not found with id + " + id));
-
-            project.setProjectName(title);
-            project.setBudget(budget);
-
-            projectService.addProject(project);
-            return new ResponseEntity<>(project, HttpStatus.OK);*/
-
+        mockMvc.perform(request).andExpect(status().isNoContent());
     }
 
 }
