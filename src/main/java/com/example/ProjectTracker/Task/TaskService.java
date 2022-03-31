@@ -71,19 +71,6 @@ public class TaskService {
     }
 
 
-    public void moveTasksByProject(Project project, Long previousId){
-
-
-        List<Task> tasks = findByProjectId(previousId);
-        if(tasks.isEmpty()){
-            throw new ResourceNotFoundException("No tasks found for project id " + project.getId());
-        }
-
-        tasks.stream().forEach(task -> task.setProject(project));
-        taskRepository.saveAll(tasks);
-    }
-
-
     public Task saveTask(Task taskRequest) {
         return taskRepository.save(taskRequest);
     }
