@@ -39,7 +39,7 @@ public class TaskService {
     public void deleteTask(Long taskId) {
         if (taskRepository.existsById(taskId)) {
             taskRepository.deleteById(taskId);
-        } else throw new IllegalStateException(
+        } else throw new ResourceNotFoundException(
                 "task " + taskId + " does not exist");
     }
 
@@ -69,7 +69,6 @@ public class TaskService {
         System.out.println(task);
 
     }
-
 
     public Task saveTask(Task taskRequest) {
         return taskRepository.save(taskRequest);

@@ -3,10 +3,7 @@ package com.example.ProjectTracker.Task;
 import com.example.ProjectTracker.Exception.ResourceNotFoundException;
 import com.example.ProjectTracker.Project.Project;
 import com.example.ProjectTracker.Project.ProjectRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,6 +30,11 @@ class TaskServiceTest {
     @BeforeEach
     void setUp(){
         taskService = new TaskService(taskRepository);
+    }
+
+    @AfterEach
+    void tearDown(){
+        taskRepository.deleteAll();
     }
 
     @Test
@@ -99,6 +101,15 @@ class TaskServiceTest {
         taskService.deleteByProjectId(99L);
         //verify repository action
         verify(taskRepository,times(1)).deleteByProjectId(99L);
+    }
+
+    @Test
+    void canNotDeleteWithInvalidId() throws ResourceNotFoundException {
+
+        when(taskRepository.existsById(1L)).thenReturn(Boolean.FALSE);
+
+        Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> taskService.deleteTask(1L));
     }
 
 
